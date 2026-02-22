@@ -7,11 +7,40 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
 import { useAuth } from "@/core/hooks/useAuth";
 
+import { encryptData } from "@/core/utils/crypto";
+import { db } from "@/lib/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+
 export default function RecordsPage() {
     const { user } = useAuth();
     const [isDragging, setIsDragging] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [analyzedData, setAnalyzedData] = useState<any>(null);
+
+    const saveToVault = async () => {
+        if (!user || !analyzedData) return;
+
+        try {
+            const encryptedFindings = encryptData({
+                summary: analyzedData.summary,
+                vitalMetrics: analyzedData.vitalMetrics,
+                redFlags: analyzedData.riskDetection
+            });
+
+            await addDoc(collection(db, "health_records"), {
+                patientId: user.uid,
+                title: analyzedData.documentType,
+                findings: encryptedFindings, // SECURE
+                createdAt: serverTimestamp(),
+                isEncrypted: true
+            });
+
+            setAnalyzedData(null);
+            alert("Record securely stored in your personal vault.");
+        } catch (error) {
+            console.error("Storage failed:", error);
+        }
+    };
 
     const mockRecords = [
         { id: "1", title: "Blood Work Summary", date: "March 12, 2025", doctor: "Dr. Aakash Mehta", type: "Lab Report", status: "Analyzed" },
@@ -124,7 +153,11 @@ export default function RecordsPage() {
                                         ))}
                                     </div>
 
-                                    <Button size="sm" className="w-full mt-6 bg-medical-teal hover:bg-medical-teal/80 text-[10px] font-black uppercase">
+                                    <Button
+                                        size="sm"
+                                        onClick={saveToVault}
+                                        className="w-full mt-6 bg-medical-teal hover:bg-medical-teal/80 text-[10px] font-black uppercase"
+                                    >
                                         Confirm & Save to Vault
                                     </Button>
                                 </Card>

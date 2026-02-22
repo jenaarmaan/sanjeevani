@@ -10,6 +10,8 @@ import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useAuth } from "@/core/hooks/useAuth";
 import { useChat } from "ai/react";
 
+import { encryptData } from "@/core/utils/crypto";
+
 export default function TriagePage() {
     const { user } = useAuth();
     const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -42,15 +44,22 @@ export default function TriagePage() {
             setShowRiskScore(true);
 
             if (user) {
+                // Encrypt Sensitive PHI before saving to Firestore
+                const encryptedConversation = encryptData(messages.map(m => ({ id: m.id, role: m.role, content: m.content })));
+                const encryptedSummary = encryptData(data.summary);
+                const encryptedRedFlags = encryptData(data.redFlags);
+
                 await addDoc(collection(db, "triage_sessions"), {
                     patientId: user.uid,
                     patientName: user.displayName,
                     createdAt: serverTimestamp(),
-                    conversation: messages.map(m => ({ id: m.id, role: m.role, content: m.content })),
+                    conversation: encryptedConversation, // SECURE
                     riskScore: data.riskScore,
                     priority: data.priority,
-                    summary: data.summary,
-                    status: "pending"
+                    summary: encryptedSummary, // SECURE
+                    redFlags: encryptedRedFlags, // SECURE
+                    status: "pending",
+                    isEncrypted: true
                 });
             }
         } catch (error) {
