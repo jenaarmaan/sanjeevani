@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
+import { EmergencyFAB } from "@/components/widgets/EmergencyFAB";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,6 +21,7 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased selection:bg-medical-teal-soft selection:text-medical-teal-deep`}>
         <Navbar />
         <main className="min-vh-100">{children}</main>
+        <EmergencyFAB />
 
         {/* Global Footer simplified for Phase 1 */}
         <footer className="border-t bg-white py-8 dark:bg-medical-teal-deep">
