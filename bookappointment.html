@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book an Appointment</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">  
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">AI Healthcare</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <h2 class="text-center">Book an Appointment</h2>
+        <form id="appointmentForm">
+            <div class="mb-3">
+                <label for="name" class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="name" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone Number</label>
+                <input type="tel" class="form-control" id="phone" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="date" class="form-label">Preferred Date</label>
+                <input type="date" class="form-control" id="date" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="time" class="form-label">Preferred Time</label>
+                <input type="time" class="form-control" id="time" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="doctor" class="form-label">Select Doctor</label>
+                <select class="form-select" id="doctor" required>
+                    <option value="Dr. John Doe">Dr. John Doe (General Physician)</option>
+                    <option value="Dr. Jane Smith">Dr. Jane Smith (Cardiologist)</option>
+                    <option value="Dr. Emily Brown">Dr. Emily Brown (Dermatologist)</option>
+                </select>
+            </div>
+
+            <button id="send-btn" class="btn btn-danger"><a href="index.html">Back</a></button>
+            <button type="submit" class="btn btn-success">Confirm Appointment</button>
+        </form>
+    </div><br><br><br><br><br>
+
+    <footer>
+        <p>&copy; 2025 Healthcare Platform. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

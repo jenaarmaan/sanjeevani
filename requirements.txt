@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+firebase-admin
+pandas
+joblib
+scikit-learn
+flask
+flask-cors
+pyrebase4
+pyngrok
+nest-asyncio
