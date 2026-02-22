@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { EmergencyFAB } from "@/components/widgets/EmergencyFAB";
+import { AuthProvider } from "@/core/hooks/useAuth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,18 +19,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased selection:bg-medical-teal-soft selection:text-medical-teal-deep`}>
-        <Navbar />
-        <main className="min-vh-100">{children}</main>
-        <EmergencyFAB />
+        <AuthProvider>
+          <Navbar />
+          <main className="min-vh-100">{children}</main>
+          <EmergencyFAB />
 
-        {/* Global Footer simplified for Phase 1 */}
-        <footer className="border-t bg-white py-8 dark:bg-medical-teal-deep">
-          <div className="container mx-auto px-4 text-center">
-            <p className="text-sm text-muted">
-              © {new Date().getFullYear()} Project Sanjeevani. Healthcare Democratized.
-            </p>
-          </div>
-        </footer>
+          {/* Global Footer simplified for Phase 1 */}
+          <footer className="border-t bg-white py-8 dark:bg-medical-teal-deep">
+            <div className="container mx-auto px-4 text-center">
+              <p className="text-sm text-muted">
+                © {new Date().getFullYear()} Project Sanjeevani. Healthcare Democratized.
+              </p>
+            </div>
+          </footer>
+        </AuthProvider>
       </body>
     </html>
   );
