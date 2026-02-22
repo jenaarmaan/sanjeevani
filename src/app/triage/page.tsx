@@ -6,6 +6,10 @@ import { Mic, Send, AlertTriangle, CheckCircle2, Info, Activity } from "lucide-r
 import { Button } from "@/components/ui/Button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
 
+import { db } from "@/lib/firebase";
+import { collection, addDoc, updateDoc, doc, serverTimestamp } from "firebase/firestore";
+import { useAuth } from "@/core/hooks/useAuth";
+
 type Message = {
     id: string;
     type: "bot" | "user";
@@ -13,36 +17,71 @@ type Message = {
 };
 
 export default function TriagePage() {
+    const { user } = useAuth();
     const [messages, setMessages] = useState<Message[]>([
         { id: "1", type: "bot", text: "Hello, I am Sanjeevani AI. I will help you assess your current health risk. What symptoms are you experiencing today?" }
     ]);
     const [input, setInput] = useState("");
     const [isProcessing, setIsProcessing] = useState(false);
     const [showRiskScore, setShowRiskScore] = useState(false);
+    const [sessionId, setSessionId] = useState<string | null>(null);
 
-    const handleSend = () => {
+    const handleSend = async () => {
         if (!input.trim()) return;
 
         const userMsg: Message = { id: Date.now().toString(), type: "user", text: input };
-        setMessages(prev => [...prev, userMsg]);
+        const newMessages = [...messages, userMsg];
+        setMessages(newMessages);
         setInput("");
         setIsProcessing(true);
 
-        // Mocking AI Triage Logic
-        setTimeout(() => {
-            const botMsg: Message = {
-                id: (Date.now() + 1).toString(),
-                type: "bot",
-                text: "Understood. I've noted those symptoms. Based on your input, I see a pattern relating to respiratory stress. Do you have a fever?"
-            };
-            setMessages(prev => [...prev, botMsg]);
-            setIsProcessing(false);
-
-            // For demo purposes, show risk score after 2 messages
-            if (messages.length >= 2) {
-                setShowRiskScore(true);
+        try {
+            // Phase 1 Hardware: Persist to Firestore
+            if (!sessionId && user) {
+                const docRef = await addDoc(collection(db, "triage_sessions"), {
+                    patientId: user.uid,
+                    patientName: user.displayName,
+                    createdAt: serverTimestamp(),
+                    conversation: newMessages,
+                    status: "pending",
+                    priority: "medium",
+                    riskScore: 0
+                });
+                setSessionId(docRef.id);
+            } else if (sessionId) {
+                await updateDoc(doc(db, "triage_sessions", sessionId), {
+                    conversation: newMessages,
+                    lastUpdated: serverTimestamp()
+                });
             }
-        }, 1500);
+
+            // Mocking AI Response + Risk Analysis
+            setTimeout(async () => {
+                const botMsg: Message = {
+                    id: (Date.now() + 1).toString(),
+                    type: "bot",
+                    text: "Understood. I've noted those symptoms. Based on your input, I see a pattern relating to respiratory stress. Do you have a fever?"
+                };
+                const finalMessages = [...newMessages, botMsg];
+                setMessages(finalMessages);
+                setIsProcessing(false);
+
+                if (sessionId) {
+                    await updateDoc(doc(db, "triage_sessions", sessionId), {
+                        conversation: finalMessages,
+                        riskScore: 65, // Mock score
+                        priority: "high"
+                    });
+                }
+
+                if (messages.length >= 2) {
+                    setShowRiskScore(true);
+                }
+            }, 1500);
+        } catch (error) {
+            console.error("Error persisting triage session:", error);
+            setIsProcessing(false);
+        }
     };
 
     return (

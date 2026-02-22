@@ -7,12 +7,35 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
 import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
 
+import { db } from "@/lib/firebase";
+import { collection, query, orderBy, onSnapshot, limit } from "firebase/firestore";
+
 export default function ClinicalPortal() {
-    const patientTriage = [
-        { id: "1", name: "Aman Singh", risk: 85, symptoms: "Acute Respiratory, Fever", status: "Critical", time: "10m ago" },
-        { id: "2", name: "Priya Rao", risk: 42, symptoms: "Chronic Joint Pain", status: "Monitor", time: "25m ago" },
-        { id: "3", name: "Kushal Kumar", risk: 68, symptoms: "Moderate GI Distress", status: "Stable", time: "1h ago" },
-    ];
+    const [patientTriage, setPatientTriage] = React.useState<any[]>([]);
+
+    React.useEffect(() => {
+        const q = query(
+            collection(db, "triage_sessions"),
+            orderBy("createdAt", "desc"),
+            limit(20)
+        );
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const sessions = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+                // Mapping Firestore data to UI structure
+                name: doc.data().patientName || "Anonymous",
+                risk: doc.data().riskScore || 0,
+                symptoms: doc.data().conversation?.[doc.data().conversation.length - 2]?.text || "Pending...",
+                status: doc.data().status.charAt(0).toUpperCase() + doc.data().status.slice(1),
+                time: "Just now" // Simplified for real-time demo
+            }));
+            setPatientTriage(sessions);
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     return (
         <ProtectedRoute allowedRoles={["doctor", "admin"]}>

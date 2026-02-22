@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { Activity, User, Bell, Menu } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { useAuth } from "@/core/hooks/useAuth";
 
 // Mocking cn since it's defined in Button.tsx but for local use let's just use it properly
 import { clsx, type ClassValue } from "clsx";
@@ -14,6 +15,8 @@ function cn(...inputs: ClassValue[]) {
 }
 
 export const Navbar = () => {
+    const { user, profile, login, logout, loading } = useAuth();
+
     return (
         <nav className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md dark:bg-medical-teal-deep/80">
             <div className="container mx-auto flex h-16 items-center justify-between px-4">
@@ -45,10 +48,29 @@ export const Navbar = () => {
                         <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-emergency-red" />
                     </Button>
                     <div className="h-8 w-px bg-border mx-2" />
-                    <Button variant="secondary" size="sm" className="hidden md:flex">
-                        <User size={18} className="mr-2" />
-                        Sign In
-                    </Button>
+
+                    {user ? (
+                        <Button variant="secondary" size="sm" className="hidden md:flex" onClick={logout}>
+                            <div className="flex items-center space-x-2">
+                                <div className="h-6 w-6 rounded-full bg-medical-teal text-white flex items-center justify-center text-[10px]">
+                                    {profile?.role[0].toUpperCase()}
+                                </div>
+                                <span>Logout</span>
+                            </div>
+                        </Button>
+                    ) : (
+                        <Button
+                            variant="secondary"
+                            size="sm"
+                            className="hidden md:flex"
+                            onClick={login}
+                            isLoading={loading}
+                        >
+                            <User size={18} className="mr-2" />
+                            Sign In
+                        </Button>
+                    )}
+
                     <button className="md:hidden p-2 text-medical-teal">
                         <Menu size={24} />
                     </button>
