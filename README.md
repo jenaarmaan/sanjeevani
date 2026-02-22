@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏥 Project Sanjeevani: Neural Health Intelligence
 
-## Getting Started
+Project Sanjeevani is a clinical-grade, AI-powered healthcare platform designed for rural accessibility, distributed disease surveillance, and high-fidelity medical triage.
 
-First, run the development server:
+Built with **Next.js 16**, **TypeScript**, and **Tailwind CSS v4**, the platform bridges the gap between urban clinical excellence and rural medical isolation.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Core Architecture & USPs
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 🧪 1. Neural AI Triage Pipeline
+- **Conversational Diagnostics:** Streams clinical-grade probing using the Vercel AI SDK and Gemini 1.5 Flash.
+- **Structured Risk Scoring:** Second-stage background analysis that detects "Red Flags" and assigns an Emergency Priority (Critical/High/Medium/Low).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 🛡️ 2. Zero-Knowledge Health Vault
+- **Client-Side Encryption:** All PHI (Personal Health Information) is encrypted using **AES-256** in the patient's browser before persistence.
+- **Privacy-Sovereign:** The server never sees raw clinical data; citizens own their cryptographic keys.
 
-## Learn More
+### 📄 3. Multimodal OCR Engine
+- **Image-to-Clinical Meta:** Advanced Vision AI parses photos of medical reports (Blood Work, Imaging) and extracts structured vitals and findings.
 
-To learn more about Next.js, take a look at the following resources:
+### 📡 4. Offline-First Infrastructure
+- **Finite-State Sync:** Firestore-backed IndexedDB persistence allows field workers to record data in zero-connectivity village zones.
+- **Automatic Reconciliation:** Data auto-syncs to the district cloud as soon as a 3G/4G signal is regained.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🏗️ The Multi-Portal Ecosystem
 
-## Deploy on Vercel
+- **`/triage`**: Citizen-facing AI symptom assessment.
+- **`/dashboard`**: Personal Health Intelligence Hub.
+- **`/records`**: The Secure Records Vault.
+- **`/clinical`**: Physician's High-Priority Queue (RBAC Protected).
+- **`/field`**: Frontline Healthcare Worker Operational Shield.
+- **`/analytics`**: Government Disease Surveillance Heatmap.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🛠️ Tech Stack & Compliance
+
+- **Framework:** Next.js 16 (App Router)
+- **Intelligence:** Vercel AI SDK + Gemini Multimodal
+- **Infrastructure:** Firebase (Firestore, Auth, Storage)
+- **Security:** AES-256 Client-Side Encryption + HIPAA-Ready Firestore Rules
+- **Deployment:** Vercel Edge Optimized
+
+---
+
+## 📦 Deployment
+
+1. **Environmental Variables:**
+   - `NEXT_PUBLIC_FIREBASE_...`: Core infra keys.
+   - `GOOGLE_GENERATIVE_AI_API_KEY`: AI Triage engine.
+   - `NEXT_PUBLIC_ENCRYPTION_KEY`: Master Vault Key.
+
+2. **Deploy via Vercel:**
+   `vercel deploy --prod`
+
+---
+
+## 🏛️ Project Ethos
+Project Sanjeevani is built on the belief that **Healthcare is a Human Right**, and **Privacy is a Universal Standard**. We leverage neural intelligence to ensure no citizen is left behind.
