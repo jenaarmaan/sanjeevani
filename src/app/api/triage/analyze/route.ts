@@ -6,7 +6,7 @@ export async function POST(req: Request) {
     const { messages } = await req.json();
 
     const result = await generateObject({
-        model: google('gemini-1.5-flash'),
+        model: google('gemini-1.5-flash') as any,
         schema: z.object({
             riskScore: z.number().min(0).max(100).describe("The percentage risk of critical illness"),
             priority: z.enum(["low", "medium", "high", "critical"]).describe("Emergency response priority"),

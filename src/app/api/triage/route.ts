@@ -1,6 +1,5 @@
 import { google } from '@ai-sdk/google';
-import { streamText, generateObject } from 'ai';
-import { z } from 'zod';
+import { streamText } from 'ai';
 
 // System prompt for clinical intelligence
 const SYMPTOM_TRIAGE_PROMPT = `
@@ -13,15 +12,13 @@ RULES:
 3. Look for "RED FLAGS" (e.g., chest pain, shortness of breath, high fever, localized weakness).
 4. If a red flag is detected, prioritize immediate emergency response.
 5. Provide a summary of your findings after 3-4 exchanges.
-
-Structure your analysis for every response internally but only output text to the user unless they ask for a report.
 `;
 
 export async function POST(req: Request) {
     const { messages } = await req.json();
 
     const result = await streamText({
-        model: google('gemini-1.5-flash'),
+        model: google('gemini-1.5-flash') as any,
         system: SYMPTOM_TRIAGE_PROMPT,
         messages,
     });

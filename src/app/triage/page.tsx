@@ -45,7 +45,7 @@ export default function TriagePage() {
 
             if (user) {
                 // Encrypt Sensitive PHI before saving to Firestore
-                const encryptedConversation = encryptData(messages.map(m => ({ id: m.id, role: m.role, content: m.content })));
+                const encryptedConversation = encryptData(messages.map((m: any) => ({ id: m.id, role: m.role, content: m.content })));
                 const encryptedSummary = encryptData(data.summary);
                 const encryptedRedFlags = encryptData(data.redFlags);
 
@@ -87,7 +87,7 @@ export default function TriagePage() {
                     <Card className="flex h-[600px] flex-col justify-between overflow-hidden border-none shadow-2xl shadow-medical-teal/5">
                         <div className="flex-1 overflow-y-auto p-6 space-y-6">
                             <AnimatePresence>
-                                {messages.map((m) => (
+                                {messages.map((m: any) => (
                                     <motion.div
                                         key={m.id}
                                         initial={{ opacity: 0, x: m.role === "user" ? 20 : -20 }}

@@ -6,7 +6,7 @@ export async function POST(req: Request) {
     const { image } = await req.json(); // base64 image
 
     const result = await generateObject({
-        model: google('gemini-1.5-flash'),
+        model: google('gemini-1.5-flash') as any,
         schema: z.object({
             documentType: z.string().describe("Type of health record (Blood work, X-ray, Prescription, etc)"),
             patientName: z.string().optional(),
@@ -26,7 +26,10 @@ export async function POST(req: Request) {
                 role: 'user',
                 content: [
                     { type: 'text', text: 'Extract data from this medical document.' },
-                    { type: 'image', image },
+                    {
+                        type: 'image',
+                        image: Uint8Array.from(atob(image), c => c.charCodeAt(0)),
+                    } as any,
                 ],
             },
         ],
