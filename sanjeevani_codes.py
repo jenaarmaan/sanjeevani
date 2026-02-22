@@ -12,31 +12,31 @@ Innitial Setup
 ===========================
 """
 
-!pip install fastapi uvicorn pyngrok firebase-admin nest-asyncio
-
-!pip install fastapi uvicorn firebase-admin
-
-from google.colab import drive
-drive.mount('/content/drive')
-
-from google.colab import files
-uploaded = files.upload()
-
-!ps aux | grep uvicorn
-
-!npm install -g firebase-tools
-
-!firebase login --no-localhost
-
-from google.colab import drive
-drive.mount('/content/drive')
-
-"""Fire base
-====================
-
-"""
-
-!pip install firebase-admin
+# !pip install fastapi uvicorn pyngrok firebase-admin nest-asyncio
+# 
+# !pip install fastapi uvicorn firebase-admin
+# 
+# # from google.colab import drive
+# # drive.mount('/content/drive')
+# 
+# # from google.colab import files
+# # uploaded = files.upload()
+# 
+# # !ps aux | grep uvicorn
+# 
+# # !npm install -g firebase-tools
+# 
+# # !firebase login --no-localhost
+# 
+# # from google.colab import drive
+# # drive.mount('/content/drive')
+# 
+# """Fire base
+# ====================
+# 
+# """
+# 
+# # !pip install firebase-admin
 
 import firebase_admin
 from firebase_admin import credentials, firestore
@@ -262,7 +262,7 @@ for user in users.users:
 
 """ Firebase Authentication (Login/Signup)"""
 
-pip install firebase-admin
+# pip install firebase-admin
 
 import firebase_admin
 from firebase_admin import credentials, auth
@@ -381,10 +381,10 @@ for doc in docs:
 import os
 os._exit(0)
 
-!pip install flask flask_cors pyrebase4 gunicorn
-!pip install pyngrok
-
-!ngrok authtoken 2uLEizRkpdkP4RecYwx8W17VomB_2z9wA14x6WaFfe1vXJFSh
+# !pip install flask flask_cors pyrebase4 gunicorn
+# !pip install pyngrok
+# 
+# # !ngrok authtoken 2uLEizRkpdkP4RecYwx8W17VomB_2z9wA14x6WaFfe1vXJFSh
 
 from flask import Flask
 
@@ -662,10 +662,10 @@ print("🩺 Predicted Disease:", predicted_disease)
 
 """# phase 2 :fast API"""
 
-!pip install pyngrok
-!ngrok authtoken YOUR_NGROK_AUTH_TOKEN
-
-!ngrok config add-authtoken 2uLEizRkpdkP4RecYwx8W17VomB_2z9wA14x6WaFfe1vXJFSh
+# !pip install pyngrok
+# # !ngrok authtoken YOUR_NGROK_AUTH_TOKEN
+# 
+# # !ngrok config add-authtoken 2uLEizRkpdkP4RecYwx8W17VomB_2z9wA14x6WaFfe1vXJFSh
 
 from pyngrok import ngrok
 
@@ -673,7 +673,7 @@ from pyngrok import ngrok
 public_url = ngrok.connect(5000)
 print(f"Public URL: {public_url}")
 
-!ls /content/
+# !ls /content/
 
 # Commented out IPython magic to ensure Python compatibility.
 # %%writefile /content/app.py
@@ -689,9 +689,9 @@ print(f"Public URL: {public_url}")
 #     app.run(host="0.0.0.0", port=5000)
 #
 
-!pip install flask-ngrok
+# !pip install flask-ngrok
 
-!pip install pyngrok
+# !pip install pyngrok
 from flask import Flask
 from pyngrok import ngrok
 
@@ -708,7 +708,7 @@ def home():
 if __name__ == "__main__":
     app.run(port=5000)
 
-!pip install flask flask-ngrok
+# !pip install flask flask-ngrok
 
 from flask import Flask
 from flask_ngrok import run_with_ngrok
@@ -742,12 +742,12 @@ app.run()
 
 
 
-!python3 /content/app.py
-
-!kill $(pgrep -f ngrok)
-!ngrok http 5000
-
-!python app.py
+# !python3 /content/app.py
+# 
+# # !kill $(pgrep -f ngrok)
+# # !ngrok http 5000
+# 
+# # !python app.py
 
 
 
@@ -785,9 +785,9 @@ print(f"Predicted Disease: {predicted_disease}")
 
 """Set Up Symptom Checker Backend (FastAPI)"""
 
-pip install flask-cors
-
-!pip install fastapi pydantic firebase-admin uvicorn
+# pip install flask-cors
+# 
+# # !pip install fastapi pydantic firebase-admin uvicorn
 
 import pandas as pd
 
@@ -1750,9 +1750,9 @@ print("Classification Report:\n", classification_report(y_test, y_pred))
 
 
 
-pip install --upgrade google-auth
-
-pip install google-auth google-auth-oauthlib google-auth-httplib2 requests
+# pip install --upgrade google-auth
+# 
+# # pip install google-auth google-auth-oauthlib google-auth-httplib2 requests
 
 import os
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/content/synthetic_medical_dataset.csv"
@@ -1799,7 +1799,7 @@ def predict():
 
 
 
-pip install google-auth google-auth-oauthlib google-auth-httplib2 google-auth-transport-requests grpcio
+# pip install google-auth google-auth-oauthlib google-auth-httplib2 google-auth-transport-requests grpcio
 
 from google.oauth2 import service_account
 
@@ -1862,7 +1862,13 @@ async def get_history():
 
 """
 
-!pip install firebase-admin
+# !pip install firebase-admin
+
+import firebase_admin
+from firebase_admin import credentials, firestore
+
+# Check if Firebase is already initialized
+# !pip install firebase-admin
 
 import firebase_admin
 from firebase_admin import credentials, firestore
@@ -1875,30 +1881,30 @@ if not firebase_admin._apps:
 # Get Firestore reference
 db = firestore.client()
 
-!pip install fastapi uvicorn pyngrok nest-asyncio
+# !pip install fastapi uvicorn pyngrok nest-asyncio
 
-!ngrok authtoken 2uLEizRkpdkP4RecYwx8W17VomB_2z9wA14x6WaFfe1vXJFSh
+# !ngrok authtoken 2uLEizRkpdkP4RecYwx8W17VomB_2z9wA14x6WaFfe1vXJFSh
 
-!pip install pyngrok
-from pyngrok import ngrok
+# !pip install pyngrok
+# from pyngrok import ngrok
 
-!ngrok.disconnect(public_url)
-public_url = ngrok.connect(8000)
-print(f"Public URL: {public_url}")
+# !ngrok.disconnect(public_url)
+# public_url = ngrok.connect(8000)
+# print(f"Public URL: {public_url}")
 
-!ngrok.disconnect(public_url)  # Only if public_url exists
-public_url = ngrok.connect(8000)
-print(f"Public URL: {public_url}")
+# !ngrok.disconnect(public_url)  # Only if public_url exists
+# public_url = ngrok.connect(8000)
+# print(f"Public URL: {public_url}")
 
-!pip install fastapi uvicorn pyngrok
+# !pip install fastapi uvicorn pyngrok
 
 from fastapi import FastAPI
-from pyngrok import ngrok
-import nest_asyncio
-import uvicorn
+# from pyngrok import ngrok
+# import nest_asyncio
+# import uvicorn
 
 # Apply nest_asyncio to avoid event loop issues in Colab
-nest_asyncio.apply()
+# nest_asyncio.apply()
 
 app = FastAPI()
 
@@ -1907,14 +1913,14 @@ def read_root():
     return {"message": "Hello, FastAPI from Colab!"}
 
 # Set ngrok authentication and expose port
-ngrok.set_auth_token("2uLEizRkpdkP4RecYwx8W17VomB_2z9wA14x6WaFfe1vXJFSh")  # Replace with your token
-public_url = ngrok.connect(8000)
-print(f"Public URL: {public_url}")
+# ngrok.set_auth_token("2uLEizRkpdkP4RecYwx8W17VomB_2z9wA14x6WaFfe1vXJFSh")  # Replace with your token
+# public_url = ngrok.connect(8000)
+# print(f"Public URL: {public_url}")
 
 # Start the FastAPI server
-uvicorn.run(app, host="0.0.0.0", port=8000)
+# uvicorn.run(app, host="0.0.0.0", port=8000)
 
-!pip install fastapi uvicorn pyngrok
+# !pip install fastapi uvicorn pyngrok
 
 from fastapi import FastAPI
 
@@ -1936,8 +1942,8 @@ def get_user(user_id: int):
 def create_item(item: dict):
     return {"message": "Item created", "item": item}
 
-# Commented out IPython magic to ensure Python compatibility.
-# %%writefile fastapi_firestore.py
+# # Commented out IPython magic to ensure Python compatibility.
+# # %%writefile fastapi_firestore.py
 # from fastapi import FastAPI
 # from firebase_admin import credentials, firestore, initialize_app
 # 
@@ -1969,8 +1975,8 @@ def create_item(item: dict):
 #     return {"error": "Patient not found"}
 #
 
-from google.colab import files
-files.upload()
+# # from google.colab import files
+# # # files.upload()
 
 import os
 print(os.listdir())
@@ -1981,16 +1987,16 @@ from firebase_admin import credentials
 cred = credentials.Certificate("/content/sanjeevani-d6b23-firebase-adminsdk-fbsvc-03180879d4.json")
 firebase_admin.initialize_app(cred)
 
-!uvicorn fastapi_firestore:app --reload
+# !uvicorn fastapi_firestore:app --reload
 
-!pip install uvicorn
+# !pip install uvicorn
 
-!ls /content
+# !ls /content
 
-!ls /content
+# !ls /content
 
-# Commented out IPython magic to ensure Python compatibility.
-# %%writefile fastapi_firestore.py
+# # Commented out IPython magic to ensure Python compatibility.
+# # %%writefile fastapi_firestore.py
 # from fastapi import FastAPI
 # 
 # app = FastAPI()
@@ -2000,11 +2006,11 @@ firebase_admin.initialize_app(cred)
 #     return {"message": "Hello, FastAPI!"}
 #
 
-!ls /content
-
-!pip install fastapi uvicorn firebase-admin
-
-!uvicorn fastapi_firestore:app --reload
+# !ls /content
+# 
+# # !pip install fastapi uvicorn firebase-admin
+# 
+# # !uvicorn fastapi_firestore:app --reload
 
 import requests
 response = requests.get("http://127.0.0.1:8000")
@@ -2018,7 +2024,7 @@ print(response.json())
 ======================
 """
 
-!pip install flask flask-ngrok pyrebase4 flask-cors
+# !pip install flask flask-ngrok pyrebase4 flask-cors
 
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_ngrok import run_with_ngrok
