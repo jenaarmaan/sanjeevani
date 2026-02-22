@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
-@theme inline {
+@theme {
   /* Healthcare Specific Colors */
   --color-medical-teal: #0d9488;
   --color-medical-teal-soft: #99f6e4;
   --color-medical-teal-deep: #0f172a;
   --color-emergency-red: #e11d48;
   --color-warning-amber: #f59e0b;
-  
+
   /* Standard Layout Colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
