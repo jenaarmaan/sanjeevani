@@ -1,0 +1,38 @@
+# Project Sanjeevani: Deployment Configuration
+# This file centralizes configuration for build, test, and static analysis (Pyright/VS Code).
+
+[project]
+name = "sanjeevani"
+version = "1.0.0"
+description = "AI Triage Intelligence for Project Sanjeevani"
+requires-python = ">=3.10"
+dependencies = [
+    "pandas",
+    "numpy",
+    "scikit-learn"
+]
+
+[tool.setuptools]
+# Explicitly defining package roots for absolute import resolution
+packages = ["core", "schema", "rules", "intelligence", "config", "tests"]
+
+[tool.pyright]
+# Pyright Configuration for VS Code Import Resolution
+include = ["."]
+extraPaths = ["."]
+exclude = ["**/node_modules", "**/__pycache__", ".venv"]
+
+# Strictness and Environment
+typeCheckingMode = "basic"
+pythonVersion = "3.10"
+pythonPlatform = "Windows"
+useLibraryCodeForTypes = true
+
+# Standardizing the execution environment to the project root
+executionEnvironments = [
+  { root = ".", extraPaths = ["."] }
+]
+
+# Analysis settings
+reportMissingImports = true
+reportMissingTypeStubs = false

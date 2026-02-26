@@ -1,0 +1,17 @@
+﻿--------------------------------------------------
+Project Sanjeevani: Metadata Validation Layer Test
+--------------------------------------------------
+
+[CASE 1] Invalid Weeks (99) + Seizures:
+   Final Risk: EMERGENCY
+   Is Emergency: True
+   Validation Warnings: ["Metadata Validation: 'weeks_pregnant' (99) out of safe range (1-45). Field excluded."]
+
+[CASE 2] Invalid BP type (String):
+   Final Risk: LOW
+   Validation Warnings: ['Metadata Validation: blood pressure systolic must be an integer. Field excluded.']
+
+[CASE 3] Invalid 'is_pregnant' type (String):
+   Final Risk: LOW
+   Validation Warnings: ["Metadata Validation: 'is_pregnant' must be a boolean. Field excluded."]
+   Is Emergency: False (Should be False because Maternal bypassed)

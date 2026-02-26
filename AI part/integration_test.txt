@@ -1,0 +1,5 @@
+﻿
+--- ML INTEGRATION TEST ---
+Final Risk Level: MODERATE
+Reasons: ['Pre-existing condition: Diabetes', 'Age over 60 increases vulnerability', 'Presence of fatigue']
+ML Predicted: MODERATE (Conf: 0.77)

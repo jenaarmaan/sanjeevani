@@ -1,0 +1,23 @@
+﻿============================================================
+PROJECT SANJEEVANI: STARTUP SELF-CHECK
+============================================================
+[1/4] Checking Runtime Dependencies...
+   - pandas: OK
+   - numpy: OK
+   - sklearn: OK
+   - pickle: OK
+
+[2/4] Checking Clinical Configuration...
+   - config/clinical_thresholds.json: OK
+
+[3/4] Checking ML Risk Refiner Model...
+   - intelligence/models/risk_refiner.pkl: OK
+
+[4/4] Verifying System Environment...
+   - Python Version: 3.10.9
+   - Environment: OK
+
+============================================================
+STATUS: READY FOR DEPLOYMENT
+============================================================
+
