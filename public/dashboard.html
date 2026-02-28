@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sanjeevini AI Healthcare System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:#F3F8FD;
+}
+
+.navbar{
+background:white;
+padding:15px 30px;
+box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+
+.brand{
+font-weight:700;
+font-size:20px;
+color:#1976D2;
+}
+
+.hero{
+background:linear-gradient(135deg,#1976D2,#42A5F5);
+color:white;
+padding:70px 0;
+text-align:center;
+}
+
+.section{
+padding:60px 0;
+display:none;
+}
+
+.active{
+display:block;
+}
+
+.card-box{
+background:white;
+padding:40px;
+border-radius:12px;
+box-shadow:0 8px 25px rgba(0,0,0,0.05);
+}
+
+.btn-main{
+background:#1976D2;
+color:white;
+border:none;
+padding:10px 20px;
+border-radius:6px;
+margin:5px;
+}
+
+.high{color:#D32F2F;font-weight:700;}
+.moderate{color:#F9A825;font-weight:700;}
+.low{color:#2E7D32;font-weight:700;}
+</style>
+</head>
+
+<body>
+
+<nav class="navbar d-flex justify-content-between">
+<div class="brand">Sanjeevini AI</div>
+<div>
+<button class="btn btn-primary btn-sm" onclick="showSection('patient')">Patient</button>
+<button class="btn btn-primary btn-sm" onclick="showSection('doctor')">Doctor</button>
+<button class="btn btn-primary btn-sm" onclick="showSection('frontline')">Frontline</button>
+<button class="btn btn-primary btn-sm" onclick="showSection('records')">Health Records</button>
+<button class="btn btn-danger btn-sm" onclick="showSection('emergency')">Emergency</button>
+</div>
+</nav>
+
+<section class="hero">
+<h1>Preventive Healthcare Intelligence Platform</h1>
+<p>AI-driven clinical monitoring system</p>
+</section>
+
+<!-- PATIENT -->
+<section id="patient" class="section active">
+<div class="container">
+<div class="card-box text-center">
+<h3>Enter Patient Symptoms</h3>
+
+<input type="number" id="age" class="form-control mb-3" placeholder="Age">
+
+<input type="text" id="symptoms" class="form-control mb-3" placeholder="Symptoms">
+
+<button class="btn btn-main" onclick="analyzeRisk()">Analyze</button>
+
+<div id="resultBox" class="mt-4"></div>
+
+</div>
+</div>
+</section>
+
+<!-- DOCTOR -->
+<section id="doctor" class="section">
+<div class="container">
+<div class="card-box">
+<h3>Doctor Dashboard</h3>
+<p>Review high risk cases and patient summaries.</p>
+<ul>
+<li>High Priority Cases</li>
+<li>Moderate Risk Follow Ups</li>
+<li>Low Risk Monitoring</li>
+</ul>
+</div>
+</div>
+</section>
+
+<!-- FRONTLINE -->
+<section id="frontline" class="section">
+<div class="container">
+<div class="card-box">
+<h3>Frontline Health Worker Panel</h3>
+<p>Community health prioritization tools.</p>
+<ul>
+<li>Urgent Visit Required</li>
+<li>Scheduled Field Check</li>
+<li>Routine Screening</li>
+</ul>
+</div>
+</div>
+</section>
+
+<!-- HEALTH RECORDS -->
+<section id="records" class="section">
+<div class="container">
+<div class="card-box">
+<h3>Digital Health Records</h3>
+<p>Upload and manage structured patient history.</p>
+<input type="file" class="form-control mt-3">
+</div>
+</div>
+</section>
+
+<!-- EMERGENCY -->
+<section id="emergency" class="section">
+<div class="container">
+<div class="card-box text-center">
+<h3 class="high">Emergency Alert Activated</h3>
+<p>Nearest healthcare unit has been notified.</p>
+</div>
+</div>
+</section>
+
+<script>
+function showSection(id){
+document.querySelectorAll('.section').forEach(sec=>{
+sec.classList.remove('active');
+});
+document.getElementById(id).classList.add('active');
+}
+
+function analyzeRisk(){
+let age = document.getElementById("age").value;
+let symptoms = document.getElementById("symptoms").value.toLowerCase();
+let resultBox = document.getElementById("resultBox");
+
+let riskText = "";
+let riskClass = "";
+
+if(symptoms.includes("chest") || symptoms.includes("breathing")){
+riskText = "High Risk - Immediate medical consultation required.";
+riskClass = "high";
+}
+else if(symptoms.includes("fever") || age > 60){
+riskText = "Moderate Risk - Monitor symptoms and consult a doctor.";
+riskClass = "moderate";
+}
+else{
+riskText = "Low Risk - Maintain preventive care.";
+riskClass = "low";
+}
+
+resultBox.innerHTML = "<h4 class='"+riskClass+"'>"+riskText+"</h4>";
+}
+</script>
+
+</body>
+</html>
