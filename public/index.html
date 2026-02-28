@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sanjeevini | Corporate Healthcare AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:#ffffff;
+color:#1e293b;
+overflow-x:hidden;
+}
+
+/* Navbar */
+.navbar{
+background:#ffffff;
+box-shadow:0 2px 8px rgba(0,0,0,0.05);
+padding:15px 0;
+}
+
+.brand{
+font-weight:700;
+font-size:22px;
+color:#0f172a;
+}
+
+.brand span{
+color:#0b5ed7;
+}
+
+.btn-main{
+background:#0b5ed7;
+color:white;
+padding:10px 24px;
+border-radius:6px;
+border:none;
+}
+
+.btn-main:hover{
+background:#084298;
+}
+
+/* Hero */
+.hero{
+position:relative;
+padding:120px 0;
+background:#f8fafc;
+text-align:center;
+overflow:hidden;
+}
+
+.hero h1{
+font-size:48px;
+font-weight:700;
+}
+
+.hero span{
+color:#0b5ed7;
+}
+
+/* ECG Background */
+.ecg-bg{
+position:absolute;
+top:50%;
+left:0;
+width:100%;
+transform:translateY(-50%);
+opacity:0.08;
+}
+
+/* ECG Animation */
+.ecg-line{
+stroke:#0b5ed7;
+stroke-width:4;
+fill:none;
+stroke-dasharray:1000;
+stroke-dashoffset:1000;
+animation:draw 4s linear infinite;
+}
+
+@keyframes draw{
+to{
+stroke-dashoffset:0;
+}
+}
+
+.section{
+padding:80px 0;
+}
+
+.card-clean{
+background:#ffffff;
+border-radius:10px;
+padding:30px;
+box-shadow:0 5px 20px rgba(0,0,0,0.05);
+transition:0.3s;
+}
+
+.card-clean:hover{
+transform:translateY(-5px);
+}
+
+footer{
+background:#0f172a;
+color:white;
+padding:30px 0;
+text-align:center;
+margin-top:60px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+<div class="container d-flex justify-content-between align-items-center">
+<div class="brand">
+Sanjeevini <span>AI</span>
+</div>
+<a href="dashboard.html" class="btn btn-main">
+Access Portal
+</a>
+</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+
+<!-- ECG Background SVG -->
+<svg class="ecg-bg" viewBox="0 0 1200 200">
+<polyline class="ecg-line"
+points="
+0,100 
+150,100 
+200,60 
+250,140 
+300,80 
+350,100 
+1200,100"
+/>
+</svg>
+
+<div class="container position-relative">
+<h1>
+Enterprise <span>Preventive Healthcare</span> Intelligence
+</h1>
+
+<p class="mt-4" style="max-width:750px;margin:auto;">
+AI-powered monitoring and early risk detection platform built for hospitals, clinical networks and public health systems.
+</p>
+
+<a href="dashboard.html" class="btn btn-main mt-4">
+Enter Clinical Dashboard
+</a>
+</div>
+
+</section>
+
+<!-- FEATURES -->
+<section class="section">
+<div class="container">
+<div class="row text-center">
+
+<div class="col-md-4">
+<div class="card-clean">
+<h5>AI Risk Stratification</h5>
+<p>Predictive scoring based on structured symptom analysis.</p>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card-clean">
+<h5>Clinical Triage Engine</h5>
+<p>Priority classification to support frontline medical teams.</p>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card-clean">
+<h5>Digital Health Records</h5>
+<p>Secure patient data interface ready for backend integration.</p>
+</div>
+</div>
+
+</div>
+</div>
+</section>
+
+<footer>
+Sanjeevini AI Healthcare Platform © 2026
+</footer>
+
+</body>
+</html>
