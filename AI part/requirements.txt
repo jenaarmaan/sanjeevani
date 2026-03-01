@@ -1,5 +1,0 @@
-# Project Sanjeevani - Core Runtime Dependencies
-# These are required for offline execution.
-pandas
-numpy
-scikit-learn

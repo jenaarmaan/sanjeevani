@@ -43,10 +43,37 @@ next-env.d.ts
 
 # project specific secrets
 **/*serviceAccountKey.json
-**/node_modules/
-**/tmp-*.js
-**/*.log
-AI part/.vscode/
 backend/config/serviceAccountKey.json
+
+# dependencies & build artifacts
+**/node_modules/
+**/.next/
+**/out/
+**/build/
+**/*.tsbuildinfo
+next-env.d.ts
+
+# debug, logs, & temp files
+**/*.log
+**/*.txt
+**/tmp-*.js
+**/.DS_Store
+**/*.pem
+
+# python caches & test artifacts
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.pytest_cache/
+**/.vscode/
+
+# intelligence/ patient data (sensitive)
+intelligence/
+AI part/intelligence/data/
+
+# environments
 .env.local
 .env.*.local
+.vercel
+

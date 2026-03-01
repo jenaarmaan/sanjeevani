@@ -15,52 +15,58 @@ export async function POST(req: NextRequest) {
         const pythonScriptPath = path.join(process.cwd(), "AI part", "cli_triage.py");
         const pythonCwd = path.join(process.cwd(), "AI part");
 
-        // 2. Invoke Python child process
-        const pythonProcess = spawn("python", [pythonScriptPath], {
-            cwd: pythonCwd,
-            env: { ...process.env, PYTHONPATH: pythonCwd }
-        });
+        // Environment Check: Vercel standard runtime lacks Python/Pandas
+        // We'll attempt to run, but provide a graceful fallback
+        const result = await new Promise<any>((resolve) => {
+            const pythonProcess = spawn("python", [pythonScriptPath], {
+                cwd: pythonCwd,
+                env: { ...process.env, PYTHONPATH: pythonCwd }
+            });
 
-        // 3. Handle data flow
-        return new Promise((resolve) => {
+            pythonProcess.on("error", (err) => {
+                console.warn("Python execution failed (expected on Vercel Node runtime):", err.message);
+                resolve({
+                    status: "fallback",
+                    risk_level: "MODERATE",
+                    reasons: ["Clinical engine offline (Serverless Environment). Using neural-only assessment."],
+                    suggested_actions: ["Consult clinical protocols manually."],
+                    is_emergency: false,
+                    explanation: { text: "The clinical verification engine is currently offline. Proceed with neural analysis results." },
+                    decision_trace: []
+                });
+            });
+
             let output = "";
             let error = "";
 
-            pythonProcess.stdout.on("data", (data) => {
-                output += data.toString();
-            });
-
-            pythonProcess.stderr.on("data", (data) => {
-                error += data.toString();
-            });
+            pythonProcess.stdout.on("data", (data) => { output += data.toString(); });
+            pythonProcess.stderr.on("data", (data) => { error += data.toString(); });
 
             pythonProcess.stdin.write(JSON.stringify(data));
             pythonProcess.stdin.end();
 
             pythonProcess.on("close", (code) => {
                 if (code !== 0) {
-                    console.error("Python process exited with error code:", code);
-                    console.error("Stderr:", error);
-                    resolve(NextResponse.json({
-                        status: "error",
-                        message: "Clinical Engine Error",
-                        details: error
-                    }, { status: 500 }));
+                    resolve({ status: "error", code, details: error });
                 } else {
                     try {
-                        const parsedOutput = JSON.parse(output);
-                        resolve(NextResponse.json(parsedOutput));
+                        resolve(JSON.parse(output));
                     } catch (e) {
-                        console.error("Failed to parse Python output:", output);
-                        resolve(NextResponse.json({
-                            status: "error",
-                            message: "Invalid engine output",
-                            details: output
-                        }, { status: 500 }));
+                        resolve({ status: "error", message: "Failed to parse JSON", details: output });
                     }
                 }
             });
         });
+
+        if (result.status === "error") {
+            return NextResponse.json({
+                status: "error",
+                message: result.message || "Clinical Engine Error",
+                details: result.details
+            }, { status: 500 });
+        }
+
+        return NextResponse.json(result);
 
     } catch (err: any) {
         console.error("Clinical check API error:", err);
@@ -71,3 +77,4 @@ export async function POST(req: NextRequest) {
         }, { status: 500 });
     }
 }
+

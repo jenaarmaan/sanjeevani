@@ -1,9 +1,0 @@
-﻿--------------------------------------------------
-Sanjeevani Triage - ML Integration Validation
---------------------------------------------------
-
-[CASE] High Risk (Rule-based):
-   Final Risk: HIGH
-   ML Prediction: HIGH
-   ML Confidence: 0.98
-   Note: ML agreed or also predicted high/equal.
