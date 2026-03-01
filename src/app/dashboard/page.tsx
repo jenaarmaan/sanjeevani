@@ -8,9 +8,23 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
 import Link from "next/link";
 import { useAuth } from "@/core/hooks/useAuth";
+import { useState, useEffect } from "react";
 
 export default function DashboardPage() {
     const { profile } = useAuth();
+    const [localBackendActive, setLocalBackendActive] = useState(false);
+
+    useEffect(() => {
+        const checkBackend = async () => {
+            try {
+                const res = await fetch("http://localhost:5000/");
+                if (res.ok) setLocalBackendActive(true);
+            } catch (e) {
+                setLocalBackendActive(false);
+            }
+        };
+        checkBackend();
+    }, []);
 
     return (
         <ProtectedRoute>
@@ -20,7 +34,11 @@ export default function DashboardPage() {
                         <h2 className="text-sm font-black uppercase tracking-[0.2em] text-medical-teal mb-2">Welcome Back, {profile?.displayName || "Citizen"}</h2>
                         <h1 className="text-4xl font-black text-medical-teal-deep dark:text-white">Your Health Intelligence</h1>
                     </div>
-                    <div className="flex space-x-3">
+                    <div className="flex space-x-3 items-center">
+                        <div className={`flex items-center space-x-2 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${localBackendActive ? "bg-medical-teal/10 text-medical-teal border border-medical-teal/20" : "bg-gray-100 text-gray-400"}`}>
+                            <div className={`h-1.5 w-1.5 rounded-full ${localBackendActive ? "bg-medical-teal animate-pulse" : "bg-gray-400"}`} />
+                            <span>{localBackendActive ? "Local Node Active" : "Local Node Offline"}</span>
+                        </div>
                         <Button variant="outline" size="sm">
                             <Smartphone size={18} className="mr-2" /> Sync Device
                         </Button>

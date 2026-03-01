@@ -34,13 +34,48 @@ export default function TriagePage() {
     const performRiskAnalysis = async () => {
         setIsAnalyzing(true);
         try {
+            // 1. Neural AI Analysis (Gemini)
             const response = await fetch("/api/triage/analyze", {
                 method: "POST",
                 body: JSON.stringify({ messages }),
                 headers: { "Content-Type": "application/json" },
             });
             const data = await response.json();
-            setRiskData(data);
+
+            // 2. Hybrid Clinical Verification (Python Engine)
+            // We feed the neural summary and conversation back for deterministic checks
+            const clinicalResponse = await fetch("/api/triage/clinical-check", {
+                method: "POST",
+                body: JSON.stringify({
+                    age: user?.metadata?.creationTime ? 30 : 25, // Fallback for demo
+                    symptoms: {
+                        fever: messages.some((m: any) => m.content.toLowerCase().includes("fever")),
+                        breathlessness: messages.some((m: any) => m.content.toLowerCase().includes("breath") || m.content.toLowerCase().includes("short")),
+                        chest_pain: messages.some((m: any) => m.content.toLowerCase().includes("chest")),
+                        fatigue: messages.some((m: any) => m.content.toLowerCase().includes("tired") || m.content.toLowerCase().includes("fatigue")),
+                    },
+                    chronic_conditions: {
+                        diabetes: false,
+                        hypertension: false
+                    },
+                    metadata: {
+                        neural_summary: data.summary,
+                        neural_risk: data.riskScore
+                    }
+                }),
+                headers: { "Content-Type": "application/json" },
+            });
+            const clinicalData = await clinicalResponse.json();
+
+            // Merge findings
+            // If clinical engine finds high risk, it overrides neural confidence
+            const finalRiskScore = Math.max(data.riskScore, clinicalData.status === "success" ? (clinicalData.risk_level === "EMERGENCY" ? 100 : clinicalData.risk_level === "HIGH" ? 80 : 20) : 0);
+
+            setRiskData({
+                ...data,
+                riskScore: finalRiskScore,
+                clinicalContext: clinicalData.explanation
+            });
             setShowRiskScore(true);
 
             if (user) {
@@ -49,18 +84,38 @@ export default function TriagePage() {
                 const encryptedSummary = encryptData(data.summary);
                 const encryptedRedFlags = encryptData(data.redFlags);
 
-                await addDoc(collection(db, "triage_sessions"), {
+                const sessionData = {
                     patientId: user.uid,
                     patientName: user.displayName,
                     createdAt: serverTimestamp(),
                     conversation: encryptedConversation, // SECURE
-                    riskScore: data.riskScore,
+                    riskScore: finalRiskScore,
                     priority: data.priority,
                     summary: encryptedSummary, // SECURE
                     redFlags: encryptedRedFlags, // SECURE
                     status: "pending",
-                    isEncrypted: true
-                });
+                    isEncrypted: true,
+                    clinicalAudit: clinicalData.status === "success" ? clinicalData.decision_trace : null
+                };
+
+                // A. Cloud Persistence (Firebase)
+                await addDoc(collection(db, "triage_sessions"), sessionData);
+
+                // B. Local Security Audit (Express Backend on Port 5000)
+                try {
+                    await fetch("http://localhost:5000/symptom-report", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            userId: user.uid,
+                            symptoms: messages.map((m: any) => m.content).join(", "),
+                            severity: data.priority,
+                            description: "Automated sync from Sanjeevani Neural Triage"
+                        })
+                    });
+                } catch (e) {
+                    console.log("Local security backend not reachable - continuing with Cloud Only");
+                }
             }
         } catch (error) {
             console.error("Analysis failed:", error);
