@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Users, MapPin, Activity, AlertCircle, Search, Filter, ShieldCheck, Zap } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
 
 export default function FieldWorkerPortal() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -17,7 +17,7 @@ export default function FieldWorkerPortal() {
     ];
 
     return (
-        <ProtectedRoute>
+        <ProtectedRoute allowedRoles={["field-worker", "admin"]}>
             <div className="container mx-auto px-6 py-12 max-w-7xl">
                 <header className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div>
