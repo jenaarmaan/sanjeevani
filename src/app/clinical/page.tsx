@@ -9,9 +9,11 @@ import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
 
 import { db } from "@/lib/firebase";
 import { collection, query, orderBy, onSnapshot, limit } from "firebase/firestore";
+import ClinicalAIReview from "@/components/clinical/AIReviewModal";
 
 export default function ClinicalPortal() {
     const [patientTriage, setPatientTriage] = React.useState<any[]>([]);
+    const [selectedSession, setSelectedSession] = React.useState<any | null>(null);
 
     React.useEffect(() => {
         const q = query(
@@ -113,7 +115,12 @@ export default function ClinicalPortal() {
                                                             <Button variant="outline" size="sm" className="h-8 w-8 p-0 rounded-lg">
                                                                 <MessageSquare size={14} />
                                                             </Button>
-                                                            <Button variant="secondary" size="sm" className="h-8 rounded-lg text-[10px] font-black uppercase">
+                                                            <Button
+                                                                variant="secondary"
+                                                                size="sm"
+                                                                onClick={() => setSelectedSession(p)}
+                                                                className="h-8 rounded-lg text-[10px] font-black uppercase"
+                                                            >
                                                                 Review AI
                                                             </Button>
                                                             <Button size="sm" className="h-8 rounded-lg">
@@ -168,6 +175,14 @@ export default function ClinicalPortal() {
                         </Card>
                     </div>
                 </div>
+
+                {/* Explainable AI Review Modal */}
+                {selectedSession && (
+                    <ClinicalAIReview
+                        session={selectedSession}
+                        onClose={() => setSelectedSession(null)}
+                    />
+                )}
             </div>
         </ProtectedRoute>
     );

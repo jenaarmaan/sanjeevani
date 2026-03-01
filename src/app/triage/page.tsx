@@ -16,6 +16,7 @@ export default function TriagePage() {
     const { user } = useAuth();
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
+    const [isLowLiteracy, setIsLowLiteracy] = useState(false);
     const [showRiskScore, setShowRiskScore] = useState(false);
     const [riskData, setRiskData] = useState<any>(null);
 
@@ -168,8 +169,18 @@ export default function TriagePage() {
                     <h1 className="text-3xl font-black text-medical-teal-deep dark:text-white">AI Health Triage</h1>
                     <p className="text-muted">Conversational medical assessment for rural accessibility.</p>
                 </div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-medical-teal/10 text-medical-teal">
-                    <Activity className="animate-pulse" />
+                <div className="flex h-12 items-center space-x-4">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setIsLowLiteracy(!isLowLiteracy)}
+                        className={cn("rounded-full border-2", isLowLiteracy ? "border-medical-teal text-medical-teal bg-medical-teal/5" : "border-gray-200")}
+                    >
+                        {isLowLiteracy ? "Standard Mode" : "Simplified Mode (Voice)"}
+                    </Button>
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-medical-teal/10 text-medical-teal">
+                        <Activity className="animate-pulse" />
+                    </div>
                 </div>
             </div>
 
@@ -204,27 +215,47 @@ export default function TriagePage() {
                             )}
                         </div>
 
-                        <form onSubmit={handleSubmit} className="border-t p-4 bg-gray-50 dark:bg-black/20">
-                            <div className="flex items-center space-x-2">
-                                <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={toggleRecording}
-                                    className={cn("rounded-full !p-3 transition-all", isRecording ? "bg-emergency-red text-white animate-pulse" : "hover:bg-medical-teal/20 text-medical-teal")}
-                                >
-                                    {isRecording ? <Disc size={24} /> : <Mic size={24} />}
-                                </Button>
-                                <input
-                                    value={input}
-                                    onChange={handleInputChange}
-                                    placeholder="Describe how you feel..."
-                                    className="flex-1 rounded-xl border-none bg-white p-4 text-sm focus:ring-2 focus:ring-medical-teal shadow-inner dark:bg-medical-teal-deep/30 dark:text-white"
-                                />
-                                <Button type="submit" size="sm" className="rounded-xl !p-4" disabled={isAiLoading || !input.trim()}>
-                                    <Send size={20} />
-                                </Button>
-                            </div>
+                        <form onSubmit={handleSubmit} className="border-t p-6 bg-gray-50 dark:bg-black/20">
+                            {isLowLiteracy ? (
+                                <div className="space-y-4">
+                                    <button
+                                        type="button"
+                                        onMouseDown={toggleRecording}
+                                        onMouseUp={toggleRecording}
+                                        className={cn(
+                                            "w-full py-12 rounded-[32px] flex flex-col items-center justify-center space-y-4 transition-all border-4",
+                                            isRecording ? "bg-emergency-red border-white shadow-2xl scale-95" : "bg-medical-teal border-medical-teal/20 text-white"
+                                        )}
+                                    >
+                                        <div className={cn("p-6 rounded-full bg-white/20", isRecording && "animate-ping")}>
+                                            {isRecording ? <Disc size={48} /> : <Mic size={48} />}
+                                        </div>
+                                        <span className="text-xl font-black uppercase tracking-widest">{isRecording ? "Listening..." : "Press & Speak"}</span>
+                                    </button>
+                                    <p className="text-center text-[10px] font-bold text-muted uppercase italic">Hold to capture symptoms naturally.</p>
+                                </div>
+                            ) : (
+                                <div className="flex items-center space-x-2">
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={toggleRecording}
+                                        className={cn("rounded-full !p-3 transition-all", isRecording ? "bg-emergency-red text-white animate-pulse" : "hover:bg-medical-teal/20 text-medical-teal")}
+                                    >
+                                        {isRecording ? <Disc size={24} /> : <Mic size={24} />}
+                                    </Button>
+                                    <input
+                                        value={input}
+                                        onChange={handleInputChange}
+                                        placeholder="Describe how you feel..."
+                                        className="flex-1 rounded-xl border-none bg-white p-4 text-sm focus:ring-2 focus:ring-medical-teal shadow-inner dark:bg-medical-teal-deep/30 dark:text-white"
+                                    />
+                                    <Button type="submit" size="sm" className="rounded-xl !p-4" disabled={isAiLoading || !input.trim()}>
+                                        <Send size={20} />
+                                    </Button>
+                                </div>
+                            )}
                         </form>
                     </Card>
                 </div>

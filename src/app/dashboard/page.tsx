@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Activity, Shield, FileText, Smartphone, ArrowUpRight, TrendingUp, AlertCircle, Calendar } from "lucide-react";
+import { Activity, Shield, FileText, Smartphone, ArrowUpRight, TrendingUp, AlertCircle, Calendar, Zap } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
 import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
@@ -149,6 +149,42 @@ export default function DashboardPage() {
                                     color="teal"
                                 />
                             </CardContent>
+                        </Card>
+
+                        {/* Medication Protocols (PRD 1D) */}
+                        <Card className="border-none shadow-xl bg-gradient-to-br from-medical-teal-deep to-black text-white p-6 relative overflow-hidden">
+                            <div className="absolute -top-4 -right-4 opacity-10 text-medical-teal">
+                                <Activity size={100} />
+                            </div>
+                            <div className="relative z-10">
+                                <div className="text-[10px] font-black uppercase text-medical-teal tracking-widest mb-4">Daily Protocols</div>
+                                <h4 className="text-xl font-black mb-6 italic">Preventive Schedule</h4>
+
+                                <div className="space-y-4">
+                                    <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
+                                        <div className="flex items-center space-x-3">
+                                            <div className="h-2 w-2 rounded-full bg-warning-amber" />
+                                            <div>
+                                                <div className="text-xs font-bold">Amlodipine 5mg</div>
+                                                <div className="text-[10px] opacity-40 uppercase">2:00 PM • Hypertension</div>
+                                            </div>
+                                        </div>
+                                        <Zap size={14} className="text-medical-teal" />
+                                    </div>
+                                    <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between opacity-50">
+                                        <div className="flex items-center space-x-3">
+                                            <div className="h-2 w-2 rounded-full bg-medical-teal" />
+                                            <div>
+                                                <div className="text-xs font-bold">Lipid Profile</div>
+                                                <div className="text-[10px] opacity-40 uppercase">Due in 2 days</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <Button className="w-full mt-6 bg-white text-medical-teal-deep hover:bg-white/90 rounded-xl text-[10px] font-black uppercase py-6">
+                                    Update Med Vault
+                                </Button>
+                            </div>
                         </Card>
 
                         <Card className="border-none shadow-xl">

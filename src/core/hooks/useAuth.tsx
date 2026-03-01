@@ -42,7 +42,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
 
                 if (userDoc.exists()) {
-                    setProfile(userDoc.data() as UserProfile);
+                    const data = userDoc.data();
+                    setProfile({
+                        ...data,
+                        uid: firebaseUser.uid,
+                    } as UserProfile);
                 } else {
                     // Create default patient profile for new users
                     const newProfile: UserProfile = {
@@ -50,6 +54,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                         email: firebaseUser.email,
                         displayName: firebaseUser.displayName,
                         role: "patient", // Default role
+                        onboarded: false, // Must complete profiling
                         createdAt: Date.now(),
                     };
                     await setDoc(doc(db, "users", firebaseUser.uid), newProfile);
