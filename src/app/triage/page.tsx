@@ -13,7 +13,7 @@ import { useChat } from "ai/react";
 import { encryptData } from "@/core/utils/crypto";
 
 export default function TriagePage() {
-    const { user } = useAuth();
+    const { user, profile } = useAuth();
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
     const [isLowLiteracy, setIsLowLiteracy] = useState(false);
@@ -22,6 +22,7 @@ export default function TriagePage() {
 
     const { messages, input, handleInputChange, handleSubmit, setInput, isLoading: isAiLoading } = useChat({
         api: "/api/triage",
+        body: { profile },
         initialMessages: [
             { id: "initial", role: "assistant", content: "Hello, I am Sanjeevani AI. I will help you assess your current health risk. What symptoms are you experiencing today?" }
         ],

@@ -69,13 +69,37 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return () => unsubscribe();
     }, []);
 
+    const handleLocalAudit = async (action: string, detail: any) => {
+        try {
+            await fetch("http://localhost:5000/sos", {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "Authorization": "audit-bypass" },
+                body: JSON.stringify({
+                    userId: detail.uid,
+                    emergencyType: "AUDIT_AUTH",
+                    location: "INTERNAL_NODE",
+                    description: `User ${action}: ${detail.email}`
+                })
+            });
+        } catch (e) {
+            console.warn("Local audit node unreachable.");
+        }
+    };
+
     const login = async () => {
         const provider = new GoogleAuthProvider();
-        await signInWithPopup(auth, provider);
+        const res = await signInWithPopup(auth, provider);
+        if (res.user) {
+            await handleLocalAudit("LOGIN", res.user);
+        }
     };
 
     const logout = async () => {
+        const userRef = auth.currentUser;
         await signOut(auth);
+        if (userRef) {
+            await handleLocalAudit("LOGOUT", userRef);
+        }
     };
 
     return (

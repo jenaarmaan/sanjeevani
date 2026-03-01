@@ -15,11 +15,19 @@ RULES:
 `;
 
 export async function POST(req: Request) {
-    const { messages } = await req.json();
+    const { messages, profile } = await req.json();
+
+    // Dynamically inject user context for personalized triage
+    const userContext = profile ? `
+    PATIENT BASELINE (CRITICAL DATA):
+    - Age: ${profile.age || 'Unknown'}
+    - Chronic Conditions: ${profile.baseline?.chronicConditions?.join(', ') || 'None reported'}
+    - Current Medications: ${profile.baseline?.medications?.join(', ') || 'None reported'}
+    ` : "Patient profile unavailable.";
 
     const result = await streamText({
         model: google('gemini-1.5-flash') as any,
-        system: SYMPTOM_TRIAGE_PROMPT,
+        system: SYMPTOM_TRIAGE_PROMPT + userContext + "\n\nIncorporate the patient's baseline into your logic. If they have Hypertension/Diabetes, be more cautious with specific symptoms.",
         messages,
     });
 

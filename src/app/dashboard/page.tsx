@@ -29,6 +29,32 @@ export default function DashboardPage() {
     return (
         <ProtectedRoute>
             <div className="container mx-auto px-4 py-10 max-w-7xl">
+                {/* Onboarding Alert (PRD 1A) */}
+                {profile && !profile.onboarded && profile.role === "patient" && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mb-10 p-1 bg-gradient-to-r from-warning-amber/40 to-emergency-red/40 rounded-[32px] shadow-2xl shadow-warning-amber/10"
+                    >
+                        <div className="bg-white dark:bg-medical-teal-deep rounded-[30px] p-6 flex flex-col md:flex-row items-center justify-between gap-6 border border-white/20">
+                            <div className="flex items-center space-x-6">
+                                <div className="h-16 w-16 bg-warning-amber/10 rounded-2xl flex items-center justify-center text-warning-amber animate-pulse">
+                                    <Shield size={32} />
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-black text-medical-teal-deep dark:text-white italic leading-tight">Identify Your Baseline.</h3>
+                                    <p className="text-sm text-muted font-medium mt-1">Your AI Triage accuracy depends on your chronic history and medications.</p>
+                                </div>
+                            </div>
+                            <Link href="/onboarding">
+                                <Button className="bg-warning-amber hover:bg-warning-amber/90 text-medical-teal-deep h-14 px-10 rounded-xl text-xs font-black uppercase tracking-widest shadow-xl shadow-warning-amber/20">
+                                    Complete Profile Setup
+                                </Button>
+                            </Link>
+                        </div>
+                    </motion.div>
+                )}
+
                 <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
                     <div>
                         <h2 className="text-sm font-black uppercase tracking-[0.2em] text-medical-teal mb-2">Welcome Back, {profile?.displayName || "Citizen"}</h2>
