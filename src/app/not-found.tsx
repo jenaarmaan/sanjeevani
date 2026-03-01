@@ -7,7 +7,7 @@ export default function NotFound() {
             <h2 className="text-6xl font-black text-medical-teal-deep mb-4 italic">404</h2>
             <p className="text-xl text-muted mb-8 italic">Diagnostics Failed: Route Not Found</p>
             <Link href="/">
-                <Button size="lg" className="rounded-2x">
+                <Button size="lg" className="rounded-2xl">
                     Return to Portal
                 </Button>
             </Link>
