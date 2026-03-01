@@ -1,0 +1,19 @@
+﻿--------------------------------------------------
+Project Sanjeevani: Pediatric Health Domain Validation
+--------------------------------------------------
+
+[CASE 1] Infant Emergency (<1yr + Fever 39C):
+   Final Risk: EMERGENCY
+   Is Emergency: True
+   Reasons: ['Pediatric Red Flag: Infant (<1yr) with significant fever (39.0░C).']
+
+[CASE 2] High Risk Pediatric (Malnutrition + 5d Fever):
+   Final Risk: HIGH
+   Reasons: ['Prolonged fever (3+ days)', 'Pediatric Risk Rule: Upgraded risk level based on child-specific factors.', 'Pediatric Risk: Prolonged fever detected (>3 days).', 'Pediatric Risk: Visible signs of malnutrition.']
+
+[CASE 3] Low Risk Pediatric (1d Fever):
+   Final Risk: LOW
+
+[CASE 4] Pediatric Emergency (Seizures):
+   Final Risk: EMERGENCY
+   Reasons: ['Pediatric Red Flag: Seizures detected.']

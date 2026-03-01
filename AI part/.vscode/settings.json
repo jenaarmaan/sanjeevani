@@ -1,0 +1,11 @@
+{
+    // Editor-only settings for VS Code. 
+    // These ensure the IDE uses the correct Python interpreter and recognizes project modules.
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}"
+    ],
+    "python.analysis.autoSearchPaths": true,
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.useLibraryCodeForTypes": true,
+    "python.defaultInterpreterPath": "C:\\Users\\yasha\\AppData\\Local\\Programs\\Python\\Python310\\python.exe"
+}

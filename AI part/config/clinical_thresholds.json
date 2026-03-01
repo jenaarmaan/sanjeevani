@@ -1,0 +1,27 @@
+{
+    "system": {
+        "version": "1.0.0",
+        "description": "Clinical Triage Thresholds for Sanjeevani"
+    },
+    "pediatric": {
+        "activation_age_limit": 12,
+        "infant_age_limit": 1,
+        "fever_emergency_threshold": 38.0,
+        "prolonged_fever_days": 3,
+        "high_risk_points_threshold": 6,
+        "moderate_risk_points_threshold": 3
+    },
+    "maternal": {
+        "critical_sys_bp": 160,
+        "late_pregnancy_weeks": 28,
+        "high_risk_points_threshold": 5,
+        "moderate_risk_points_threshold": 2
+    },
+    "general": {
+        "elderly_age_limit": 60,
+        "vulnerable_age_limit": 45,
+        "prolonged_fever_days": 3,
+        "high_risk_points_threshold": 7,
+        "moderate_risk_points_threshold": 4
+    }
+}
