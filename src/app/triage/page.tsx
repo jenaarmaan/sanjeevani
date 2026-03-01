@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, Send, AlertTriangle, CheckCircle2, Info, Activity } from "lucide-react";
+import { Mic, Send, AlertTriangle, CheckCircle2, Info, Activity, Disc } from "lucide-react";
 import { Button, cn } from "@/components/ui/Button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
 import { db } from "@/lib/firebase";
@@ -15,21 +15,43 @@ import { encryptData } from "@/core/utils/crypto";
 export default function TriagePage() {
     const { user } = useAuth();
     const [isAnalyzing, setIsAnalyzing] = useState(false);
+    const [isRecording, setIsRecording] = useState(false);
     const [showRiskScore, setShowRiskScore] = useState(false);
     const [riskData, setRiskData] = useState<any>(null);
 
-    const { messages, input, handleInputChange, handleSubmit, isLoading: isAiLoading } = useChat({
+    const { messages, input, handleInputChange, handleSubmit, setInput, isLoading: isAiLoading } = useChat({
         api: "/api/triage",
         initialMessages: [
             { id: "initial", role: "assistant", content: "Hello, I am Sanjeevani AI. I will help you assess your current health risk. What symptoms are you experiencing today?" }
         ],
-        onFinish: async () => {
-            // Trigger analysis after a substantial conversation
-            if (messages.length >= 4 && !showRiskScore) {
+        onFinish: async (message) => {
+            // Trigger analysis after a substantial conversation (4+ messages)
+            if (messages.length >= 3 && !showRiskScore) {
                 performRiskAnalysis();
             }
         }
     });
+
+    // Voice Input Implementation (Web Speech API)
+    const toggleRecording = () => {
+        if (!isRecording) {
+            const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+            if (SpeechRecognition) {
+                const recognition = new SpeechRecognition();
+                recognition.onstart = () => setIsRecording(true);
+                recognition.onend = () => setIsRecording(false);
+                recognition.onresult = (event: any) => {
+                    const transcript = event.results[0][0].transcript;
+                    setInput(transcript);
+                };
+                recognition.start();
+            } else {
+                alert("Speech recognition is not supported in this browser.");
+            }
+        } else {
+            setIsRecording(false);
+        }
+    };
 
     const performRiskAnalysis = async () => {
         setIsAnalyzing(true);
@@ -71,6 +93,24 @@ export default function TriagePage() {
             // If clinical engine finds high risk, it overrides neural confidence
             const finalRiskScore = Math.max(data.riskScore, clinicalData.status === "success" ? (clinicalData.risk_level === "EMERGENCY" ? 100 : clinicalData.risk_level === "HIGH" ? 80 : 20) : 0);
 
+            // Trigger Emergency Protocol if High Risk
+            if (finalRiskScore > 80) {
+                try {
+                    await fetch("/api/emergency/alert", {
+                        method: "POST",
+                        body: JSON.stringify({
+                            patientId: user?.uid || "Anonymous",
+                            riskLevel: finalRiskScore,
+                            details: clinicalData.status === "success" ? clinicalData.reasons : [],
+                            location: "Mysuru Sector-4" // Placeholder for village detection
+                        }),
+                        headers: { "Content-Type": "application/json" }
+                    });
+                } catch (e) {
+                    console.error("Emergency Alert failed:", e);
+                }
+            }
+
             setRiskData({
                 ...data,
                 riskScore: finalRiskScore,
@@ -80,19 +120,16 @@ export default function TriagePage() {
 
             if (user) {
                 // Encrypt Sensitive PHI before saving to Firestore
-                const encryptedConversation = encryptData(messages.map((m: any) => ({ id: m.id, role: m.role, content: m.content })));
-                const encryptedSummary = encryptData(data.summary);
-                const encryptedRedFlags = encryptData(data.redFlags);
-
+                // Re-stating the session data with clinical audit trace
                 const sessionData = {
                     patientId: user.uid,
                     patientName: user.displayName,
                     createdAt: serverTimestamp(),
-                    conversation: encryptedConversation, // SECURE
+                    conversation: encryptData(messages.map((m: any) => ({ id: m.id, role: m.role, content: m.content }))),
                     riskScore: finalRiskScore,
                     priority: data.priority,
-                    summary: encryptedSummary, // SECURE
-                    redFlags: encryptedRedFlags, // SECURE
+                    summary: encryptData(data.summary),
+                    redFlags: encryptData(data.redFlags),
                     status: "pending",
                     isEncrypted: true,
                     clinicalAudit: clinicalData.status === "success" ? clinicalData.decision_trace : null
@@ -108,17 +145,17 @@ export default function TriagePage() {
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
                             userId: user.uid,
-                            symptoms: messages.map((m: any) => m.content).join(", "),
-                            severity: data.priority,
-                            description: "Automated sync from Sanjeevani Neural Triage"
+                            symptoms: messages.filter((m: any) => m.role === "user").map((m: any) => m.content),
+                            severity: finalRiskScore > 80 ? "CRITICAL" : "MODERATE",
+                            description: `Triage Summary: ${data.summary}`
                         })
                     });
-                } catch (e) {
-                    console.log("Local security backend not reachable - continuing with Cloud Only");
+                } catch (err) {
+                    console.warn("Local security sync failed (offline).");
                 }
             }
-        } catch (error) {
-            console.error("Analysis failed:", error);
+        } catch (err) {
+            console.error("Risk analysis failure:", err);
         } finally {
             setIsAnalyzing(false);
         }
@@ -169,8 +206,14 @@ export default function TriagePage() {
 
                         <form onSubmit={handleSubmit} className="border-t p-4 bg-gray-50 dark:bg-black/20">
                             <div className="flex items-center space-x-2">
-                                <Button type="button" variant="ghost" size="sm" className="rounded-full !p-3 hover:bg-medical-teal/20 text-medical-teal">
-                                    <Mic size={24} />
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={toggleRecording}
+                                    className={cn("rounded-full !p-3 transition-all", isRecording ? "bg-emergency-red text-white animate-pulse" : "hover:bg-medical-teal/20 text-medical-teal")}
+                                >
+                                    {isRecording ? <Disc size={24} /> : <Mic size={24} />}
                                 </Button>
                                 <input
                                     value={input}

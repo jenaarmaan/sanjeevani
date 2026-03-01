@@ -66,20 +66,47 @@ export default function DashboardPage() {
                                 </div>
 
                                 <div className="flex-1 space-y-6">
-                                    <h3 className="text-xl font-bold">Intelligent Prediction</h3>
-                                    <p className="text-sm text-medical-teal-soft/80 leading-relaxed">
-                                        Your baseline health data suggests a robust immune profile. We recommend maintaining your current vitamin D supplementation as per your last report.
-                                    </p>
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="text-xl font-bold">Health Trajectory</h3>
+                                        <Link href="/analytics" className="text-[10px] font-black uppercase text-medical-teal hover:underline decoration-2 underline-offset-4">
+                                            Vitals Audit →
+                                        </Link>
+                                    </div>
+
+                                    {/* SVG Sparkline for Trend Visualization */}
+                                    <div className="h-24 w-full bg-white/5 rounded-2xl border border-white/10 p-4 relative overflow-hidden">
+                                        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#0d9488_0.5px,transparent_0.5px)] [background-size:10px:10px]" />
+                                        <svg viewBox="0 0 100 20" className="w-full h-full drop-shadow-[0_0_8px_rgba(13,148,136,0.3)]">
+                                            <motion.path
+                                                d="M 0 15 Q 10 5, 20 12 T 40 8 T 60 14 T 80 6 T 100 10"
+                                                fill="transparent"
+                                                stroke="#0d9488"
+                                                strokeWidth="1.5"
+                                                initial={{ pathLength: 0 }}
+                                                animate={{ pathLength: 1 }}
+                                                transition={{ duration: 2, ease: "easeInOut" }}
+                                            />
+                                            <motion.circle
+                                                cx="100" cy="10" r="1.5"
+                                                fill="#0d9488"
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                transition={{ delay: 1.5 }}
+                                            />
+                                        </svg>
+                                        <div className="absolute bottom-2 left-4 text-[8px] font-black uppercase text-medical-teal-soft opacity-60">7-Day Wellness Index</div>
+                                    </div>
+
                                     <div className="flex space-x-4">
-                                        <div className="rounded-2xl bg-white/5 p-4 flex-1">
-                                            <div className="text-xs font-bold text-medical-teal-soft uppercase mb-1">Upcoming</div>
-                                            <div className="font-bold">Follow-up Call</div>
-                                            <div className="text-[10px] opacity-60">Dr. Aakash • Tomorrow 10am</div>
+                                        <div className="rounded-2xl bg-white/5 p-4 flex-1 border border-white/5">
+                                            <div className="text-xs font-black text-medical-teal-soft uppercase mb-1">Status</div>
+                                            <div className="font-bold">Clinical Sync</div>
+                                            <div className="text-[10px] opacity-60">Last sync: 2m ago</div>
                                         </div>
-                                        <div className="rounded-2xl bg-white/5 p-4 flex-1 border border-white/10">
-                                            <div className="text-xs font-bold text-medical-teal-soft uppercase mb-1">Reports</div>
-                                            <div className="font-bold">2 New Summaries</div>
-                                            <div className="text-[10px] opacity-60">AI Analysis Completed</div>
+                                        <div className="rounded-2xl bg-white/5 p-4 flex-1 border border-white/5">
+                                            <div className="text-xs font-black text-medical-teal-soft uppercase mb-1">Alerts</div>
+                                            <div className="font-bold text-medical-teal">0 Flags</div>
+                                            <div className="text-[10px] opacity-60">Environment Stable</div>
                                         </div>
                                     </div>
                                 </div>

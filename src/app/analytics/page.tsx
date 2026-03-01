@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Activity, Globe, MapPin, Users, TrendingUp, Filter, Download } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import { Button, cn } from "@/components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
 import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
 
@@ -34,28 +34,45 @@ export default function AnalyticsPage() {
                 </div>
 
                 <div className="grid gap-8 lg:grid-cols-12">
-                    {/* Risk Map Placeholder */}
+                    {/* Real-time Risk Heatmap Surveillance */}
                     <div className="lg:col-span-8">
-                        <Card className="h-[500px] border-none shadow-2xl relative overflow-hidden bg-gray-50 flex items-center justify-center">
-                            <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#0d9488_1px,transparent_1px)] [background-size:20px_20px]" />
-                            <div className="text-center relative z-10">
-                                <MapPin size={60} className="text-medical-teal mx-auto mb-4 animate-bounce" />
-                                <h3 className="text-xl font-bold text-medical-teal-deep">Surveillance Engine</h3>
-                                <p className="text-muted text-sm mt-2">Spatial heatmap of localized disease clusters.</p>
-                                <div className="mt-8 flex justify-center space-x-2">
-                                    {[...Array(5)].map((_, i) => (
-                                        <div key={i} className="h-10 w-10 rounded-full border-2 border-white bg-medical-teal/20" />
-                                    ))}
+                        <Card className="h-[500px] border-none shadow-2xl relative overflow-hidden bg-medical-teal-deep/5 flex flex-col p-6">
+                            <div className="flex items-center justify-between mb-4">
+                                <div>
+                                    <h3 className="text-xl font-bold text-medical-teal-deep">Live Risk Grid</h3>
+                                    <p className="text-xs text-muted">Localized disease cluster detection (Sector 1 - 25)</p>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <div className="h-2 w-2 rounded-full bg-emergency-red animate-ping" />
+                                    <span className="text-[10px] font-bold text-emergency-red uppercase">Live Outbreak Detect</span>
                                 </div>
                             </div>
 
-                            {/* Fake UI Overlay */}
-                            <div className="absolute bottom-6 left-6 p-4 bg-white/90 backdrop-blur rounded-2xl shadow-lg border border-medical-teal/20 max-w-[200px]">
-                                <div className="text-[10px] font-black uppercase text-medical-teal mb-2">Live Activity</div>
-                                <div className="flex items-center space-x-2">
-                                    <div className="h-2 w-2 rounded-full bg-emergency-red animate-ping" />
-                                    <span className="text-xs font-bold text-medical-teal-deep tracking-tighter">New SOS: Mysuru Sector-4</span>
+                            <div className="flex-1 grid grid-cols-5 gap-2 opacity-80">
+                                {[...Array(25)].map((_, i) => (
+                                    <motion.div
+                                        key={i}
+                                        initial={{ opacity: 0, scale: 0.8 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{ delay: i * 0.02 }}
+                                        className={cn(
+                                            "rounded-xl border border-white shadow-sm flex items-center justify-center text-[8px] font-black text-white/50",
+                                            i === 7 || i === 12 || i === 18 ? "bg-emergency-red animate-pulse" :
+                                                i % 4 === 0 ? "bg-warning-amber" : "bg-medical-teal/40"
+                                        )}
+                                    >
+                                        S-{i + 1}
+                                    </motion.div>
+                                ))}
+                            </div>
+
+                            <div className="mt-4 flex items-center justify-between text-[10px] font-bold text-muted uppercase">
+                                <div className="flex items-center space-x-3">
+                                    <span className="flex items-center"><div className="h-2 w-2 rounded-full bg-medical-teal mr-1" /> Stable</span>
+                                    <span className="flex items-center"><div className="h-2 w-2 rounded-full bg-warning-amber mr-1" /> Elevated</span>
+                                    <span className="flex items-center"><div className="h-2 w-2 rounded-full bg-emergency-red mr-1" /> Outbreak</span>
                                 </div>
+                                <span>Updated: Just Now</span>
                             </div>
                         </Card>
                     </div>

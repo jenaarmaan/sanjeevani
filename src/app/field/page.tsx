@@ -1,20 +1,40 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { Wifi, WifiOff, MapPin, Search, Calendar, CheckSquare, Plus, ArrowRight } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Wifi, WifiOff, MapPin, Search, Calendar, CheckSquare, Plus, ArrowRight, Loader } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
 import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
 
 export default function FieldWorkerPortal() {
     const [isOnline, setIsOnline] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
+    const [villageQueue, setVillageQueue] = useState<any[]>([]);
 
-    // Mock village data
-    const villageQueue = [
-        { id: "1", name: "Ramesh K.", age: 65, location: "Block C - Sector 4", priority: "High", task: "Vitals Sync" },
-        { id: "2", name: "Sita Devi", age: 28, location: "East Village Hub", priority: "Medium", task: "Prenatal Check" },
-        { id: "3", name: "Arjun M.", age: 42, location: "Block A - Primary", priority: "Low", task: "Follow-up" },
+    useEffect(() => {
+        const fetchQueue = async () => {
+            setIsLoading(true);
+            try {
+                const res = await fetch("/api/field/queue");
+                const data = await res.json();
+                if (data.status === "success") {
+                    setVillageQueue(data.queue);
+                }
+            } catch (err) {
+                console.error("Queue fetch failed:", err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchQueue();
+    }, []);
+
+    // Placeholder data fallback if empty
+    const displayQueue = villageQueue.length > 0 ? villageQueue : [
+        { id: "fallback-1", name: "Ramesh K.", age: 65, location: "Block C - Sector 4", priority: "High", task: "Vitals Sync" },
+        { id: "fallback-2", name: "Sita Devi", age: 28, location: "East Village Hub", priority: "Medium", task: "Prenatal Check" },
     ];
 
     return (
@@ -56,44 +76,55 @@ export default function FieldWorkerPortal() {
                     <h3 className="font-black text-xs uppercase tracking-[0.3em] text-muted mb-2 px-1">Active Field Queue</h3>
 
                     <div className="space-y-4">
-                        {villageQueue.map((item) => (
-                            <motion.div
-                                key={item.id}
-                                whileHover={{ scale: 1.01 }}
-                                whileTap={{ scale: 0.99 }}
-                            >
-                                <Card className="border-none shadow-xl hover:shadow-2xl transition-all cursor-pointer group">
-                                    <CardContent className="flex items-center justify-between p-6">
-                                        <div className="flex items-center space-x-5">
-                                            <div className={`h-14 w-14 rounded-2xl flex items-center justify-center text-white font-black text-xl ${item.priority === "High" ? "bg-emergency-red" :
-                                                    item.priority === "Medium" ? "bg-warning-amber" : "bg-medical-teal"
-                                                }`}>
-                                                {item.name[0]}
-                                            </div>
-                                            <div>
-                                                <div className="flex items-center space-x-2">
-                                                    <h4 className="text-xl font-black text-medical-teal-deep dark:text-white capitalize">{item.name}</h4>
-                                                    <span className="text-xs font-bold text-muted">Age: {item.age}</span>
+                        {isLoading ? (
+                            <div className="flex flex-col items-center justify-center py-20 bg-gray-50 rounded-[32px] border-2 border-dashed border-gray-200">
+                                <Loader size={48} className="text-medical-teal animate-spin mb-4" />
+                                <p className="font-bold text-muted uppercase tracking-widest text-xs">Computing Priority Ranking...</p>
+                            </div>
+                        ) : (
+                            <AnimatePresence>
+                                {displayQueue.map((item) => (
+                                    <motion.div
+                                        key={item.id}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        whileHover={{ scale: 1.01 }}
+                                        whileTap={{ scale: 0.99 }}
+                                    >
+                                        <Card className={`border-none shadow-xl hover:shadow-2xl transition-all cursor-pointer group ${item.priority === "High" ? "bg-emergency-red/5 ring-1 ring-emergency-red/20" : ""}`}>
+                                            <CardContent className="flex items-center justify-between p-6">
+                                                <div className="flex items-center space-x-5">
+                                                    <div className={`h-14 w-14 rounded-2xl flex items-center justify-center text-white font-black text-xl ${item.priority === "High" ? "bg-emergency-red" :
+                                                        item.priority === "Medium" ? "bg-warning-amber" : "bg-medical-teal"
+                                                        }`}>
+                                                        {item.name[0]}
+                                                    </div>
+                                                    <div>
+                                                        <div className="flex items-center space-x-2">
+                                                            <h4 className="text-xl font-black text-medical-teal-deep dark:text-white capitalize">{item.name}</h4>
+                                                            <span className="text-xs font-bold text-muted">Age: {item.age}</span>
+                                                        </div>
+                                                        <div className="flex items-center text-muted font-medium text-sm mt-1">
+                                                            <MapPin size={14} className="mr-1" /> {item.location}
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div className="flex items-center text-muted font-medium text-sm mt-1">
-                                                    <MapPin size={14} className="mr-1" /> {item.location}
-                                                </div>
-                                            </div>
-                                        </div>
 
-                                        <div className="flex items-center space-x-4">
-                                            <div className="hidden md:block text-right mr-4">
-                                                <div className="text-[10px] font-black uppercase text-medical-teal">{item.task}</div>
-                                                <div className="text-xs font-bold text-muted">Awaiting Visit</div>
-                                            </div>
-                                            <div className="h-10 w-10 bg-gray-50 rounded-full flex items-center justify-center text-medical-teal group-hover:bg-medical-teal group-hover:text-white transition-colors">
-                                                <ArrowRight size={20} />
-                                            </div>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </motion.div>
-                        ))}
+                                                <div className="flex items-center space-x-4">
+                                                    <div className="hidden md:block text-right mr-4">
+                                                        <div className={`text-[10px] font-black uppercase ${item.priority === "High" ? "text-emergency-red" : "text-medical-teal"}`}>{item.task}</div>
+                                                        <div className="text-xs font-bold text-muted">{item.id.includes("fallback") ? "Awaiting Visit" : "New AI Assessment"}</div>
+                                                    </div>
+                                                    <div className="h-10 w-10 bg-gray-50 rounded-full flex items-center justify-center text-medical-teal group-hover:bg-medical-teal group-hover:text-white transition-colors">
+                                                        <ArrowRight size={20} />
+                                                    </div>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    </motion.div>
+                                ))}
+                            </AnimatePresence>
+                        )}
                     </div>
 
                     <Button size="lg" className="w-full rounded-[24px] py-8 text-xl shadow-2xl shadow-medical-teal/30 mt-8">
