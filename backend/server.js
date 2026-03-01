@@ -3,6 +3,16 @@ const express = require("express");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const admin = require("firebase-admin");
+
+// ===================== FIREBASE ADMIN SETUP =====================
+const serviceAccount = require("./config/serviceAccountKey.json");
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+});
+
+const db = admin.firestore();
 
 // ===================== SECRET KEY =====================
 const SECRET_KEY = "sanjeevani-super-secret";

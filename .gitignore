@@ -41,4 +41,12 @@ yarn-error.log*
 next-env.d.ts
 
 
-config/serviceAccountKey.json
+# project specific secrets
+**/*serviceAccountKey.json
+**/node_modules/
+**/tmp-*.js
+**/*.log
+AI part/.vscode/
+backend/config/serviceAccountKey.json
+.env.local
+.env.*.local
